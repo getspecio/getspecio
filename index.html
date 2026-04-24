@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Getspecio — Find Your Exact Laptop</title>
+  <meta name="description" content="Find the exact UK laptop configuration you need. Filter by CPU, GPU, RAM, storage, display, ports and keyboard layout to get the precise model number — no guessing." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&family=DM+Sans:opsz,wght@9..40,700;9..40,800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-name">get<em>specio</em></span>
+        <span class="logo-sub">Find your exact laptop — precise specs, real model numbers</span>
+      </div>
+      <div class="header-actions">
+        <span class="config-count" id="configCount"></span>
+        <button class="theme-toggle" data-theme-toggle aria-label="Switch theme"></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN LAYOUT -->
+  <main class="layout">
+
+    <!-- FILTERS SIDEBAR -->
+    <aside class="filters" id="filters">
+      <div class="filters-header">
+        <h2>Filters</h2>
+        <button class="btn-reset" id="resetBtn">Reset all</button>
+      </div>
+
+      <div class="filters-body" id="filtersBody">
+
+        <!-- Search — always visible at top -->
+        <div class="accordion-item">
+          <button class="accordion-trigger active" data-accordion="search">
+            <span style="display:flex;align-items:center;gap:4px">
+              <span class="accordion-dot" id="dot-search"></span>Search
+            </span>
+            <svg class="accordion-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </button>
+          <div class="accordion-body open" id="body-search">
+            <div class="accordion-inner">
+              <input type="text" class="text-filter" id="searchFilter" placeholder="Product code, model name, spec…" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Brand -->
+        <div class="accordion-item">
+          <button class="accordion-trigger active" data-accordion="brand">
+            <span style="display:flex;align-items:center;gap:4px">
+              <span class="accordion-dot" id="dot-brand"></span>Brand
+            </span>
+            <svg class="accordion-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </button>
+          <div class="accordion-body open" id="body-brand">
+            <div class="accordion-inner">
+              <div class="chip-group" id="brandFilter">
+                <button class="chip active" data-value="">All</button>
+                <button class="chip" data-value="Lenovo">Lenovo</button>
+                <button class="chip" data-value="HP">HP</button>
+                <button class="chip" data-value="Dell">Dell</button>
+                <button class="chip" data-value="ASUS">ASUS</button>
+                <button class="chip" data-value="Microsoft">Microsoft</button>
+                <button class="chip" data-value="Samsung">Samsung</button>
+                <button class="chip" data-value="Apple">Apple</button>
+                <button class="chip chip--disabled" data-value="Chromebook" disabled title="Coming soon">Chromebook <span class="chip-soon">soon</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen Size -->
+        <div class="accordion-item">
+          <button class="accordion-trigger" data-accordion="size">
+            <span style="display:flex;align-items:center;gap:4px">
+              <span class="accordion-dot" id="dot-size"></span>Screen Size
+            </span>
+            <svg class="accordion-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </button>
+          <div class="accordion-body" id="body-size">
+            <div class="accordion-inner">
+              <div class="chip-group" id="sizeFilter">
+                <button class="chip active" data-value="">Any</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Processor -->
+        <div class="accordion-item">
+          <button class="accordion-trigger" data-accordion="cpu">
+            <span style="display:flex;align-items:center;gap:4px">
+              <span class="accordion-dot" id="dot-cpu"></span>Processor
+            </span>
+            <svg class="accordion-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </button>
+          <div class="accordion-body" id="body-cpu">
+            <div class="accordion-inner" style="display:flex;flex-direction:column;gap:0.5rem">
+              <div class="chip-group" id="cpuBrandFilter">
+                <button class="chip active" data-value="">Any brand</button>
+                <button class="chip" data-value="Intel">Intel</button>
+                <button class="chip" data-value="AMD">AMD</button>
+              </div>
+              <select class="select-filter" id="cpuFilter">
+                <option value="">Any processor model</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- GPU -->
+        <div class="accordion-item">
+          <button class="accordion-trigger" data-accordion="gpu">
+            <span style="display:flex;align-items:center;gap:4px">
+              <span class="accordion-dot" id="dot-gpu"></span>Graphics (GPU)
+            </span>
+            <svg class="accordion-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </button>
+          <div class="accordion-body" id="body-gpu">
+            <div class="accordion-inner" style="display:flex;flex-direction:column;gap:0.5rem">
+              <div class="chip-group" id="gpuTypeFilter">
+                <button class="chip active" data-value="">Any</button>
+                <button class="chip" data-value="Integrated">Integrated</button>
+                <button class="chip" data-value="Discrete">Discrete</button>
+              </div>
+              <select class="select-filter" id="gpuFilter">
+                <option value="">Any GPU model</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Memory -->
+        <div class="accordion-item">
+          <button class="accordion-trigger" data-accordion="ram">
+            <span style="display:flex;align-items:center;gap:4px">
+              <span class="accordion-dot" id="dot-ram"></span>Memory (RAM)
+            </span>
+            <svg class="accordion-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </button>
+          <div class="accordion-body" id="body-ram">
+            <div class="accordion-inner">
+              <div class="chip-group" id="ramFilter">
+                <button class="chip active" data-value="">Any</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Storage -->
+        <div class="accordion-item">
+          <button class="accordion-trigger" data-accordion="storage">
+            <span style="display:flex;align-items:center;gap:4px">
+              <span class="accordion-dot" id="dot-storage"></span>Storage
+            </span>
+            <svg class="accordion-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </button>
+          <div class="accordion-body" id="body-storage">
+            <div class="accordion-inner">
+              <div class="chip-group" id="storageFilter">
+                <button class="chip active" data-value="">Any</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Display -->
+        <div class="accordion-item">
+          <button class="accordion-trigger" data-accordion="display">
+            <span style="display:flex;align-items:center;gap:4px">
+              <span class="accordion-dot" id="dot-display"></span>Display
+            </span>
+            <svg class="accordion-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </button>
+          <div class="accordion-body" id="body-display">
+            <div class="accordion-inner" style="display:flex;flex-direction:column;gap:0.5rem">
+              <div class="chip-group" id="panelFilter">
+                <button class="chip active" data-value="">Any panel</button>
+              </div>
+              <div class="chip-group" id="touchFilter">
+                <button class="chip active" data-value="">Any touch</button>
+                <button class="chip" data-value="true">Touchscreen</button>
+                <button class="chip" data-value="false">No touch</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Refresh Rate -->
+        <div class="accordion-item">
+          <button class="accordion-trigger" data-accordion="hz">
+            <span style="display:flex;align-items:center;gap:4px">
+              <span class="accordion-dot" id="dot-hz"></span>Refresh Rate
+            </span>
+            <svg class="accordion-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </button>
+          <div class="accordion-body" id="body-hz">
+            <div class="accordion-inner">
+              <div class="chip-group" id="hzFilter">
+                <button class="chip active" data-value="">Any</button>
+                <button class="chip" data-value="60">60Hz</button>
+                <button class="chip" data-value="90">90Hz+</button>
+                <button class="chip" data-value="120">120Hz+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Connectivity -->
+        <div class="accordion-item">
+          <button class="accordion-trigger" data-accordion="connectivity">
+            <span style="display:flex;align-items:center;gap:4px">
+              <span class="accordion-dot" id="dot-connectivity"></span>Connectivity
+            </span>
+            <svg class="accordion-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </button>
+          <div class="accordion-body" id="body-connectivity">
+            <div class="accordion-inner">
+              <div class="chip-group" id="connectivityFilter">
+                <button class="chip active" data-value="">Any</button>
+                <button class="chip" data-value="4g">Built-in SIM</button>
+                <button class="chip" data-value="ethernet">Ethernet Port</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Colour -->
+        <div class="accordion-item">
+          <button class="accordion-trigger" data-accordion="colour">
+            <span style="display:flex;align-items:center;gap:4px">
+              <span class="accordion-dot" id="dot-colour"></span>Colour
+            </span>
+            <svg class="accordion-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6l4 4 4-4"/></svg>
+          </button>
+          <div class="accordion-body" id="body-colour">
+            <div class="accordion-inner">
+              <div class="chip-group" id="colorFilter">
+                <button class="chip active" data-value="">Any colour</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /filters-body -->
+
+      <div class="psref-note">
+        UK market configurations. Specs sourced from manufacturer data.
+      </div>
+    </aside>
+
+    <!-- RESULTS PANEL -->
+    <section class="results" id="results">
+      <div class="results-toolbar">
+        <span class="results-count" id="resultsCount"></span>
+        <select class="select-filter sort-select" id="sortSelect">
+          <option value="model">Sort: Model A–Z</option>
+          <option value="price-asc">Sort: Price low–high</option>
+          <option value="price-desc">Sort: Price high–low</option>
+          <option value="cpu">Sort: CPU</option>
+          <option value="ram">Sort: RAM</option>
+          <option value="storage">Sort: Storage</option>
+        </select>
+      </div>
+
+      <div class="no-results" id="noResults" style="display:none">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35M8 11h6"/></svg>
+        <p>No configurations match your filters.</p>
+        <button class="btn-reset-inline" id="resetBtn2">Clear all filters</button>
+      </div>
+
+      <div class="cards-grid" id="cardsGrid"></div>
+
+      <div class="load-more-wrap" id="loadMoreWrap" style="display:none">
+        <button class="btn-load-more" id="loadMoreBtn">Show more results</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- DETAIL MODAL -->
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true">
+    <div class="modal">
+      <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+      <div class="modal-content" id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- LEGAL MODAL -->
+  <div class="modal-overlay legal-modal-overlay" id="legalModalOverlay" role="dialog" aria-modal="true">
+    <div class="modal modal--legal">
+      <button class="modal-close" id="legalModalClose" aria-label="Close">&times;</button>
+      <div class="modal-content" id="legalModalContent"></div>
+    </div>
+  </div>
+
+  <!-- COOKIE BANNER -->
+  <div class="cookie-banner" id="cookieBanner">
+    <div class="cookie-banner-card">
+      <div class="cookie-banner-inner">
+        <p class="cookie-banner-text">We use cookies to track affiliate referrals so we can keep getspecio free to use. <button class="cookie-link" id="cookiePolicyBtn">Cookie Policy</button></p>
+        <div class="cookie-banner-actions">
+          <button class="btn-cookie-accept" id="cookieAccept">Accept cookies</button>
+          <button class="btn-cookie-decline" id="cookieDecline">Decline</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SITE FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span class="footer-brand">get<em>specio</em></span>
+      <nav class="footer-links">
+        <button class="footer-link" data-legal="about">About</button>
+        <button class="footer-link" data-legal="privacy">Privacy Policy</button>
+        <button class="footer-link" data-legal="terms">Terms of Use</button>
+        <button class="footer-link" data-legal="cookies">Cookie Policy</button>
+      </nav>
+      <p class="footer-copy">&copy; 2026 getspecio. We may earn a commission when you click through to a retailer.</p>
+    </div>
+  </footer>
+
+  <script src="configs.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
